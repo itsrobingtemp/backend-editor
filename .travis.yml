@@ -10,5 +10,4 @@ script:
   - npm test
 jobs:
   include:
-    if: branch = master
-    env: BUILD=yes
+    if: branch = test
