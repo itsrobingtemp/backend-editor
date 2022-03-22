@@ -23,7 +23,7 @@ app.use("/post", postContent);
 app.use("/get", getContent);
 app.use("/update", updateContent);
 
-// 404
+// 404 test
 app.use((req, res, next) => {
   var err = new Error("Not Found");
   err.status = 404;
