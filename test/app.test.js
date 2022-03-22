@@ -8,6 +8,8 @@ let server = require("../app.js");
 chai.should();
 chai.use(chaiHttp);
 
+const mockDocID = "615a22f453d74f748150f868";
+
 describe("ME API", () => {
   // GET /
   describe("GET /", () => {
@@ -29,7 +31,7 @@ describe("ME API", () => {
     it("It should get a post", (done) => {
       chai
         .request(server)
-        .get("/get/615a22f453d74f748150f868")
+        .get("/get/" + mockDocID)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.an("object");
@@ -105,11 +107,11 @@ describe("ME API", () => {
         text: "New test",
       };
 
-      const id = "615a22f453d74f748150f868";
+      // const id = "615a22f453d74f748150f868";
 
       chai
         .request(server)
-        .patch("/update/" + id)
+        .patch("/update/" + mockDocID)
         .send(post)
         .end((err, res) => {
           res.should.have.status(200);
