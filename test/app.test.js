@@ -26,7 +26,7 @@ describe("ME API", () => {
     });
   });
 
-  // GET ID
+  // GET ID test
   describe("GET /:id", () => {
     it("It should get a post", (done) => {
       chai
