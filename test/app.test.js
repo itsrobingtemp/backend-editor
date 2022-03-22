@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "test";
+// process.env.NODE_ENV = "test";
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
@@ -31,7 +31,7 @@ describe("ME API", () => {
     it("It should get a post", (done) => {
       chai
         .request(server)
-        .get("/get/" + mockDocID)
+        .get("/get/" + "615a22f453d74f748150f868")
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.an("object");
@@ -107,11 +107,11 @@ describe("ME API", () => {
         text: "New test",
       };
 
-      // const id = "615a22f453d74f748150f868";
+      const id = "615a22f453d74f748150f868";
 
       chai
         .request(server)
-        .patch("/update/" + mockDocID)
+        .patch("/update/" + id)
         .send(post)
         .end((err, res) => {
           res.should.have.status(200);
