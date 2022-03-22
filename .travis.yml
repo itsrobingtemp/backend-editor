@@ -1,8 +1,15 @@
 language: node_js
 node_js:
-  - "16"
+  - "node"
+  - "14"
+  - "12"
+  - "11"
+  - "10"
 services: mongodb
 before_script:
   - npm install
+before_script:
+  - sleep 15
 script:
   - npm test
+
