@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 const mockDocID = "615a22f453d74f748150f868";
 
 describe("ME API", () => {
-  // GET /
+  // GET /test
   describe("GET /", () => {
     it("It should get all posts", (done) => {
       chai
