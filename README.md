@@ -13,4 +13,4 @@
 - /post -> Post new document using the body parameter "text"
 - /update -> Update a post using the body parameters "id" & "text"
 
-[![Build Status](https://app.travis-ci.com/robingtemp/editor-backend.svg?branch=main)](https://app.travis-ci.com/robingtemp/editor-backend)
+[![Build Status](https://app.travis-ci.com/itsrobingtemp/backend-editor.svg?branch=master)](https://app.travis-ci.com/itsrobingtemp/backend-editor)

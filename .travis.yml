@@ -8,4 +8,7 @@ before_script:
   - sleep 15
 script:
   - npm test
-
+jobs:
+  include:
+    if: branch = master
+    env: BUILD=yes
