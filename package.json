@@ -17,12 +17,17 @@
     "mongodb": "^4.4.1",
     "mongoose": "^6.0.5",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.13",
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "mocha": "^9.1.2",
     "nyc": "^15.1.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.6",
+    "utf-8-validate": "^5.0.9"
   }
 }

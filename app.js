@@ -17,7 +17,32 @@ if (process.env.NODE_ENV !== "test") {
   app.use(morgan("combined"));
 }
 
+// Socket.io
+const httpServer = require("http").createServer(app);
+
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: process.env.SOCKET_URL,
+    methods: ["GET", "POST"],
+  },
+});
+
+io.sockets.on("connection", (socket) => {
+  console.log("a user connected:", socket.id);
+
+  socket.on("editing", (socket) => {
+    console.log("Currently editing!");
+  });
+});
+
+httpServer.listen(1337, "127.0.0.1");
+
 app.use(cors());
+
+// Default route
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 app.use("/post", postContent);
 app.use("/get", getContent);
