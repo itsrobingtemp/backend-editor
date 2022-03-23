@@ -27,11 +27,18 @@ const io = require("socket.io")(httpServer, {
   },
 });
 
-io.sockets.on("connection", (socket) => {
-  console.log("a user connected:", socket.id);
+io.on("connection", (socket) => {
+  console.log(socket.id, "joined the server.");
 
-  socket.on("editing", (socket) => {
-    console.log("Currently editing!");
+  socket.on("doc", function (data) {
+    socket.to(data._id).emit("doc", data);
+    console.log(data.html);
+    // Spara till databas och göra annat med data
+  });
+
+  socket.on("create", function (room) {
+    socket.join(room);
+    console.log(socket.id, "joined room", room);
   });
 });
 
