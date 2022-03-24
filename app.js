@@ -32,7 +32,6 @@ io.on("connection", (socket) => {
 
   socket.on("doc", function (data) {
     socket.to(data._id).emit("doc", data);
-    console.log(data.html);
     // Spara till databas och göra annat med data
   });
 
