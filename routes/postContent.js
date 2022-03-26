@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const Content = require("../models/Content.js");
+const verify = require("./jwtVerify.js");
 
-router.post("/", async function (req, res) {
+router.post("/", verify, async function (req, res) {
   const data = new Content({
     text: req.body.text,
     name: req.body.name,
+    owner: req.user._id,
+    sharedWith: req.body.sharedWith,
   });
 
   try {

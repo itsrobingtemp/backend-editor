@@ -1,19 +1,27 @@
 const express = require("express");
 const Content = require("../models/Content.js");
 const router = express.Router();
+const verify = require("./jwtVerify.js");
 
 // get all content
-router.get("/", async function (req, res) {
+router.get("/", verify, async function (req, res) {
   try {
-    const content = await Content.find();
-    res.json(content);
+    const content = await Content.find({ owner: req.user._id });
+
+    if (content) {
+      res.json(content);
+    } else {
+      res.status(401).json({ error: "No content found" });
+    }
+
+    // res.json({ userId: req.user._id, content: content });
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 // get ID content
-router.get("/:id", async function (req, res) {
+router.get("/:id", verify, async function (req, res) {
   try {
     const content = await Content.findById(req.params.id);
     res.json(content);

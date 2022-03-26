@@ -10,6 +10,7 @@ app.use(express.json());
 const postContent = require("./routes/postContent");
 const getContent = require("./routes/getContent");
 const updateContent = require("./routes/updateContent");
+const auth = require("./routes/auth.js");
 
 const port = process.env.PORT || 1337;
 
@@ -32,7 +33,6 @@ io.on("connection", (socket) => {
 
   socket.on("doc", function (data) {
     socket.to(data._id).emit("doc", data);
-    // Spara till databas och göra annat med data
   });
 
   socket.on("create", function (room) {
@@ -53,8 +53,9 @@ app.get("/", (req, res) => {
 app.use("/post", postContent);
 app.use("/get", getContent);
 app.use("/update", updateContent);
+app.use("/user", auth);
 
-// 404 2
+// 404
 app.use((req, res, next) => {
   var err = new Error("Not Found");
   err.status = 404;
@@ -64,7 +65,6 @@ app.use((req, res, next) => {
 // For errors
 app.use((err, req, res, next) => {
   if (res.headersSent) {
-    // Test
     return next(err);
   }
 

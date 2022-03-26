@@ -9,6 +9,15 @@ const ContentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  owner: {
+    type: String,
+    required: true,
+  },
+  sharedWith: {
+    type: String,
+    required: true,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("Content", ContentSchema);
