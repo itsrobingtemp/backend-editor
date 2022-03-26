@@ -33,7 +33,8 @@ router.post("/register", async (req, res, next) => {
 
   try {
     const savedUser = await user.save();
-    res.send(savedUser);
+    const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
+    res.header("auth-token", token).json({ token: token });
   } catch (err) {
     res.status(400).json({ error: "Nått gick snett..." });
   }

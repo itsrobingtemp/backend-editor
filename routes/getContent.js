@@ -13,8 +13,6 @@ router.get("/", verify, async function (req, res) {
     } else {
       res.status(401).json({ error: "No content found" });
     }
-
-    // res.json({ userId: req.user._id, content: content });
   } catch (err) {
     res.status(400).send(err);
   }

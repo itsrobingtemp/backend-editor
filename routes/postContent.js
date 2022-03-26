@@ -8,7 +8,7 @@ router.post("/", verify, async function (req, res) {
     text: req.body.text,
     name: req.body.name,
     owner: req.user._id,
-    sharedWith: req.body.sharedWith,
+    sharedWith: req.user._id,
   });
 
   try {
