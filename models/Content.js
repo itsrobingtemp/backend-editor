@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ContentSchema = mongoose.Schema({
   text: {
-    type: String,
+    type: mongoose.SchemaTypes.Mixed,
     required: true,
   },
   name: {
@@ -17,6 +17,10 @@ const ContentSchema = mongoose.Schema({
     type: String,
     required: true,
     default: "",
+  },
+  isCode: {
+    type: Boolean,
+    default: false,
   },
 });
 

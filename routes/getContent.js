@@ -6,7 +6,22 @@ const verify = require("./jwtVerify.js");
 // get all content
 router.get("/", verify, async function (req, res) {
   try {
-    const content = await Content.find({ owner: req.user._id });
+    const content = await Content.find({ owner: req.user._id, isCode: false });
+
+    if (content) {
+      res.json(content);
+    } else {
+      res.status(401).json({ error: "No content found" });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// Get code content
+router.get("/code", verify, async function (req, res) {
+  try {
+    const content = await Content.find({ owner: req.user._id, isCode: true });
 
     if (content) {
       res.json(content);

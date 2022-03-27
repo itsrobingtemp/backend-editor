@@ -3,8 +3,16 @@ const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const Content = require("./models/Content.js");
+const verify = require("./routes/jwtVerify.js");
+
+// Graphql
+const { graphqlHTTP } = require("express-graphql");
+const schema = require("./graphql/Schemas/index.js");
+
+// Other
 require("dotenv/config");
-app.use(express.json());
 
 // Routes
 const postContent = require("./routes/postContent");
@@ -14,11 +22,15 @@ const auth = require("./routes/auth.js");
 
 const port = process.env.PORT || 1337;
 
+// Middlewares
+app.use(express.json());
+app.use(cors());
+
 if (process.env.NODE_ENV !== "test") {
   app.use(morgan("combined"));
 }
 
-// Socket.io
+// Sockets
 const httpServer = require("http").createServer(app);
 
 const io = require("socket.io")(httpServer, {
@@ -28,32 +40,72 @@ const io = require("socket.io")(httpServer, {
   },
 });
 
+// Verify user connection
+io.use(function (socket, next) {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    jwt.verify(
+      socket.handshake.query.token,
+      process.env.JWT_SECRET,
+
+      function (err, decoded) {
+        if (err) return next(new Error("Authentication error"));
+
+        socket.user = decoded;
+        next();
+      }
+    );
+  } else {
+    next(new Error("Authentication error"));
+  }
+});
+
+// Connection
 io.on("connection", (socket) => {
+  console.log("USER ID: ", socket.user._id);
   console.log(socket.id, "joined the server.");
 
-  socket.on("doc", function (data) {
-    socket.to(data._id).emit("doc", data);
+  socket.on("send-doc-changes", (data) => {
+    socket.to(data._id).emit("receive-doc-changes", data.delta);
   });
 
-  socket.on("create", function (room) {
+  socket.on("doc-joined", function (room) {
     socket.join(room);
     console.log(socket.id, "joined room", room);
   });
+
+  socket.on("doc-save", async (data) => {
+    const incomingData = new Content({
+      text: data.delta,
+      name: data.name,
+      owner: socket.id,
+      sharedWith: data.sharedWith,
+    });
+
+    try {
+      const saveContent = await incomingData.save();
+      socket.to(data._id).emit("saved-doc-changes", saveContent);
+    } catch (err) {
+      socket.to(data._id).emit("error", "Couldn't save content");
+    }
+  });
 });
 
-httpServer.listen(1337, "127.0.0.1");
+httpServer.listen(process.env.PORT || 1338);
 
-app.use(cors());
-
-// Default route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
+// API routes
 app.use("/post", postContent);
 app.use("/get", getContent);
 app.use("/update", updateContent);
 app.use("/user", auth);
+
+app.use(
+  "/graphql",
+  // verify,
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+);
 
 // 404
 app.use((req, res, next) => {
@@ -62,7 +114,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-// For errors
+// Errors
 app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
@@ -87,7 +139,6 @@ if (process.env.NODE_ENV === "test") {
   mongoose.connect(process.env.DB_CONNECTION);
 }
 
-// Start up server
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}!`)
 );

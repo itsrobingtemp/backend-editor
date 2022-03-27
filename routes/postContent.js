@@ -9,11 +9,12 @@ router.post("/", verify, async function (req, res) {
     name: req.body.name,
     owner: req.user._id,
     sharedWith: req.user._id,
+    isCode: req.body.iscode,
   });
 
   try {
     const saveContent = await data.save();
-    res.status(200).json("Dokument sparat!");
+    res.status(200).json(saveContent);
   } catch (err) {
     res.status(500).json(err);
   }
