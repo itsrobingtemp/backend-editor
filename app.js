@@ -114,7 +114,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-// Errors d
+// Errors
 app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
