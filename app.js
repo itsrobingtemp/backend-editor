@@ -40,6 +40,12 @@ const io = require("socket.io")(httpServer, {
   },
 });
 
+io.listen(httpServer);
+
+app.start = app.listen = function () {
+  return httpServer.listen.apply(httpServer, arguments);
+};
+
 // Verify user connection
 io.use(function (socket, next) {
   if (socket.handshake.query && socket.handshake.query.token) {
@@ -90,8 +96,6 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(port || 1338);
-
 // API routes
 app.use("/post", postContent);
 app.use("/get", getContent);
@@ -139,8 +143,6 @@ if (process.env.NODE_ENV === "test") {
   mongoose.connect(process.env.DB_CONNECTION);
 }
 
-const server = app.listen(port, () =>
-  console.log(`Listening on port ${port}!`)
-);
+const server = app.start(port, () => console.log(`Listening on port ${port}!`));
 
 module.exports = server;
