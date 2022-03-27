@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(process.env.PORT || 1338);
+httpServer.listen(port || 1338);
 
 // API routes
 app.use("/post", postContent);
